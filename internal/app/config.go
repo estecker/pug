@@ -23,6 +23,7 @@ type Config struct {
 	Debug                   bool
 	DisableReloadAfterApply bool
 	Workdir                 internal.Workdir
+	Tfvars                  string
 	DataDir                 string
 	Envs                    []string
 	Args                    []string
@@ -47,6 +48,7 @@ func Parse(stderr io.Writer, args []string) (Config, error) {
 	fs := ff.NewFlagSet("pug")
 	fs.StringVar(&cfg.Program, 'p', "program", "terraform", "The default program to use with pug.")
 	workdir := fs.String('w', "workdir", ".", "The working directory containing modules.")
+	tfvars := fs.String('f', "tfvars", "", "Directory containing .tfvars files. If not specified, defaults to the module directory.")
 	fs.IntVar(&cfg.MaxTasks, 't', "max-tasks", 2*runtime.NumCPU(), "The maximum number of parallel tasks.")
 	fs.StringVar(&cfg.DataDir, 0, "data-dir", defaultDataDir, "Directory in which to store plan files.")
 	fs.StringListVar(&cfg.Envs, 'e', "env", "Environment variable to pass to terraform process. Can set more than once.")
@@ -90,6 +92,19 @@ func Parse(stderr io.Writer, args []string) (Config, error) {
 	cfg.Workdir, err = internal.NewWorkdir(*workdir)
 	if err != nil {
 		return Config{}, err
+	}
+
+	// Process tfvars directory if provided
+	if *tfvars != "" {
+		abs, err := filepath.Abs(*tfvars)
+		if err != nil {
+			return Config{}, fmt.Errorf("converting tfvars directory \"%s\" to an absolute path: %w", *tfvars, err)
+		}
+		// Ensure path exists
+		if _, err := os.Stat(abs); err != nil {
+			return Config{}, fmt.Errorf("tfvars directory \"%s\": %w", *tfvars, err)
+		}
+		cfg.Tfvars = abs
 	}
 
 	return cfg, nil

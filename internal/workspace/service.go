@@ -15,10 +15,11 @@ type Service struct {
 	table  workspaceTable
 	logger logging.Interface
 
-	modules modules
-	tasks   *task.Service
-	datadir string
-	workdir internal.Workdir
+	modules     modules
+	tasks       *task.Service
+	datadir     string
+	workdir     internal.Workdir
+	tfvars      string
 
 	*pubsub.Broker[*Workspace]
 	*reloader
@@ -31,6 +32,7 @@ type ServiceOptions struct {
 	Logger  logging.Interface
 	DataDir string
 	Workdir internal.Workdir
+	Tfvars  string
 }
 
 type workspaceTable interface {
@@ -67,6 +69,7 @@ func NewService(opts ServiceOptions) *Service {
 		logger:  opts.Logger,
 		datadir: opts.DataDir,
 		workdir: opts.Workdir,
+		tfvars:  opts.Tfvars,
 	}
 	s.reloader = &reloader{s}
 	s.costTaskSpecCreator = &costTaskSpecCreator{s}

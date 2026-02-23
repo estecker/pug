@@ -35,7 +35,7 @@ projects:
       - dev.tfvars
 `
 
-	got, err := generateCostConfig(workdir, ws1, ws2)
+	got, err := generateCostConfig(workdir, "", ws1, ws2)
 	require.NoError(t, err)
 
 	assert.YAMLEq(t, want, string(got))

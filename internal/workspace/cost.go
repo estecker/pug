@@ -45,7 +45,7 @@ func (s *costTaskSpecCreator) Cost(workspaceIDs ...resource.ID) (task.Spec, erro
 	}
 	{
 		// generate config for infracost
-		configBody, err := generateCostConfig(s.workdir, workspaces...)
+		configBody, err := generateCostConfig(s.workdir, s.tfvars, workspaces...)
 		if err != nil {
 			return task.Spec{}, err
 		}
@@ -123,7 +123,7 @@ type infracostProjectConfig struct {
 	TerraformVarFiles  []string `yaml:"terraform_var_files,omitempty"`
 }
 
-func generateCostConfig(workdir internal.Workdir, workspaces ...*Workspace) ([]byte, error) {
+func generateCostConfig(workdir internal.Workdir, tfvars string, workspaces ...*Workspace) ([]byte, error) {
 	cfg := infracostConfig{Version: "0.1"}
 	cfg.Projects = make([]infracostProjectConfig, len(workspaces))
 
@@ -132,7 +132,7 @@ func generateCostConfig(workdir internal.Workdir, workspaces ...*Workspace) ([]b
 			Path:               ws.ModulePath,
 			TerraformWorkspace: ws.Name,
 		}
-		if fname, ok := ws.VarsFile(workdir); ok {
+		if fname, ok := ws.VarFiles(workdir, tfvars); ok {
 			cfg.Projects[i].TerraformVarFiles = []string{fname}
 		}
 	}

@@ -46,12 +46,24 @@ func (ws *Workspace) LogValue() slog.Value {
 	)
 }
 
-// VarsFile returns the filename of the workspace's terraform variables file
-// and whether it exists or not.
-func (ws *Workspace) VarsFile(workdir internal.Workdir) (string, bool) {
+// VarFiles returns the path to the workspace's terraform variables file
+// and whether it exists or not. If tfvars is provided, it looks in that
+// directory instead of the module directory and returns the absolute path.
+// Otherwise it returns just the filename (relative to the module directory).
+func (ws *Workspace) VarFiles(workdir internal.Workdir, tfvars string) (string, bool) {
 	fname := fmt.Sprintf("%s.tfvars", ws.Name)
-	path := filepath.Join(workdir.String(), ws.ModulePath, fname)
+	var path string
+	if tfvars != "" {
+		path = filepath.Join(tfvars, fname)
+	} else {
+		path = filepath.Join(workdir.String(), ws.ModulePath, fname)
+	}
 	_, err := os.Stat(path)
+	// When using a custom tfvars directory, return the full path
+	// Otherwise return just the filename (terraform will look in the module dir)
+	if tfvars != "" {
+		return path, err == nil
+	}
 	return fname, err == nil
 }
 
