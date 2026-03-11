@@ -15,11 +15,11 @@ type Service struct {
 	table  workspaceTable
 	logger logging.Interface
 
-	modules     modules
-	tasks       *task.Service
-	datadir     string
-	workdir     internal.Workdir
-	tfvars      string
+	modules modules
+	tasks   *task.Service
+	datadir string
+	workdir internal.Workdir
+	tfvars  string
 
 	*pubsub.Broker[*Workspace]
 	*reloader

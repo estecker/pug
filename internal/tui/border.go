@@ -50,9 +50,9 @@ func borderize(content string, active bool, embeddedText map[BorderPosition]stri
 			false: lipgloss.Border(lipgloss.NormalBorder()),
 		}
 		colorVal = Blue
-		border = thickness[active]
-		style  = lipgloss.NewStyle()
-		width  = lipgloss.Width(content)
+		border   = thickness[active]
+		style    = lipgloss.NewStyle()
+		width    = lipgloss.Width(content)
 	)
 	if !active {
 		colorVal = InactivePreviewBorder

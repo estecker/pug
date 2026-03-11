@@ -60,14 +60,12 @@ func Start(cfg app.Config) error {
 		return err
 	}
 
-	p := tea.NewProgram(m,
-		// Enabling mouse cell motion removes the ability to "blackboard" text
-		// with the mouse, which is useful for then copying text into the
-		// clipboard. Therefore we've decided to disable it and leave it
-		// commented out for posterity.
-		//
-		// tea.WithMouseCellMotion(),
-	)
+	p := tea.NewProgram(m)// Enabling mouse cell motion removes the ability to "blackboard" text
+	// with the mouse, which is useful for then copying text into the
+	// clipboard. Therefore we've decided to disable it and leave it
+	// commented out for posterity.
+	//
+	// tea.WithMouseCellMotion(),
 
 	ch, unsub := setupSubscriptions(app, cfg)
 	defer unsub()

@@ -32,7 +32,7 @@ var (
 
 var (
 	DebugLogLevel = Blue
-	InfoLogLevel  = Turquoise  // In v2, just use the color directly or handle profile in renderer
+	InfoLogLevel  = Turquoise // In v2, just use the color directly or handle profile in renderer
 	ErrorLogLevel = Red
 	WarnLogLevel  = Yellow
 

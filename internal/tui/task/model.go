@@ -237,12 +237,12 @@ func (m *Model) View() tea.View {
 			Height(m.height).
 			// Crop content exceeding height
 			MaxHeight(m.height).
-		Width(infoContentWidth).
-		Render(wrapped)
-	components = append(components, container)
-}
-components = append(components, m.viewport.View().Content)
-return tea.NewView(lipgloss.JoinHorizontal(lipgloss.Left, components...))
+			Width(infoContentWidth).
+			Render(wrapped)
+		components = append(components, container)
+	}
+	components = append(components, m.viewport.View().Content)
+	return tea.NewView(lipgloss.JoinHorizontal(lipgloss.Left, components...))
 }
 
 func boolToOnOff(b bool) string {
