@@ -3,11 +3,11 @@ package tui
 import (
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/bubbles/viewport"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/hokaccha/go-prettyjson"
 	"github.com/leg100/pug/internal/tui/keys"
@@ -33,7 +33,7 @@ type ViewportOptions struct {
 
 func NewViewport(opts ViewportOptions) Viewport {
 	m := Viewport{
-		viewport: viewport.New(0, 0),
+		viewport: viewport.New(),
 		json:     opts.JSON,
 		spinner:  opts.Spinner,
 	}
@@ -52,7 +52,7 @@ func (m Viewport) Update(msg tea.Msg) (Viewport, tea.Cmd) {
 	)
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Navigation.GotoTop):
 			m.viewport.SetYOffset(0)
@@ -68,7 +68,7 @@ func (m Viewport) Update(msg tea.Msg) (Viewport, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m Viewport) View() string {
+func (m Viewport) View() tea.View {
 	var output string
 	if len(m.content) == 0 {
 		msg := "Awaiting output"
@@ -77,27 +77,27 @@ func (m Viewport) View() string {
 			msg += " " + m.spinner.View()
 		}
 		output = Regular.
-			Height(m.viewport.Height).
-			Width(m.viewport.Width).
+			Height(m.viewport.Height()).
+			Width(m.viewport.Width()).
 			Render(msg)
 	} else {
 		output = m.viewport.View()
 	}
 	scrollbar := Scrollbar(
-		m.viewport.Height,
+		m.viewport.Height(),
 		m.viewport.TotalLineCount(),
 		m.viewport.VisibleLineCount(),
-		m.viewport.YOffset,
+		m.viewport.YOffset(),
 	)
-	return lipgloss.JoinHorizontal(lipgloss.Top, output, scrollbar)
+	return tea.NewView(lipgloss.JoinHorizontal(lipgloss.Top, output, scrollbar))
 }
 
 func (m *Viewport) SetDimensions(width, height int) {
 	width = max(0, width-ScrollbarWidth)
 	// If width has changed, re-wrap existing content.
-	rewrap := m.viewport.Width != width
-	m.viewport.Width = width
-	m.viewport.Height = height
+	rewrap := m.viewport.Width() != width
+	m.viewport.SetWidth(width)
+	m.viewport.SetHeight(height)
 	if rewrap {
 		m.setContent()
 	}
@@ -131,7 +131,7 @@ func (m *Viewport) AppendContent(content []byte, finished, autoScroll bool) (err
 func (m *Viewport) setContent() {
 	// Wrap content to the width of the viewport, whilst respecting ANSI escape
 	// codes (i.e. don't split codes across lines).
-	wrapped := ansi.Wrap(ansi.Wordwrap(string(m.content), m.viewport.Width, ""), m.viewport.Width, "")
+	wrapped := ansi.Wrap(ansi.Wordwrap(string(m.content), m.viewport.Width(), ""), m.viewport.Width(), "")
 	sanitized := SanitizeColors([]byte(wrapped))
 	m.viewport.SetContent(string(sanitized))
 }

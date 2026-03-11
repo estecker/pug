@@ -3,8 +3,8 @@ package task
 import (
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/task"
 	"github.com/leg100/pug/internal/tui"
@@ -79,7 +79,7 @@ func (m *groupList) Update(msg tea.Msg) tea.Cmd {
 	)
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, groupListKeys.Enter):
 			if row, ok := m.table.CurrentRow(); ok {
@@ -94,7 +94,7 @@ func (m *groupList) Update(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m groupList) View() string {
+func (m groupList) View() tea.View {
 	return m.table.View()
 }
 

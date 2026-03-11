@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	lgtree "github.com/charmbracelet/lipgloss/tree"
+	lgtree "charm.land/lipgloss/v2/tree"
 	"github.com/leg100/pug/internal"
 	"github.com/leg100/pug/internal/module"
 	"github.com/leg100/pug/internal/resource"

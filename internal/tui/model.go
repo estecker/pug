@@ -1,15 +1,15 @@
 package tui
 
 import (
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/resource"
 )
 
 type ChildModel interface {
 	Init() tea.Cmd
 	Update(tea.Msg) tea.Cmd
-	View() string
+	View() tea.View
 }
 
 // Maker makes new models

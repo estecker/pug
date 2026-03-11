@@ -3,10 +3,10 @@ package tui
 import (
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // PromptMsg enables the prompt widget.
@@ -53,7 +53,6 @@ func NewPrompt(msg PromptMsg) (*Prompt, tea.Cmd) {
 	model.Prompt = msg.Prompt
 	model.SetValue(msg.InitialValue)
 	model.Placeholder = msg.Placeholder
-	model.PlaceholderStyle = lipgloss.NewStyle().Faint(true)
 	blink := model.Focus()
 
 	prompt := Prompt{
@@ -77,7 +76,7 @@ type Prompt struct {
 
 // HandleKey handles the user key press, and returns a command to be run, and
 // whether the prompt should be closed.
-func (p *Prompt) HandleKey(msg tea.KeyMsg) (closePrompt bool, cmd tea.Cmd) {
+func (p *Prompt) HandleKey(msg tea.KeyPressMsg) (closePrompt bool, cmd tea.Cmd) {
 	switch {
 	case key.Matches(msg, p.trigger):
 		cmd = p.action(p.model.Value())
@@ -94,7 +93,7 @@ func (p *Prompt) HandleKey(msg tea.KeyMsg) (closePrompt bool, cmd tea.Cmd) {
 // HandleBlink handles the bubbletea blink message.
 func (p *Prompt) HandleBlink(msg tea.Msg) (cmd tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		// Ignore key presses, they're handled by HandleKey above.
 	default:
 		// The blink message type is unexported so we just send unknown types to
@@ -109,7 +108,7 @@ func (p *Prompt) View(width int) string {
 	paddedBorderWidth := paddedBorder.GetHorizontalBorderSize() + paddedBorder.GetHorizontalPadding()
 	// Set available width for user entered value before it horizontally
 	// scrolls.
-	p.model.Width = max(0, width-lipgloss.Width(p.model.Prompt)-paddedBorderWidth)
+	p.model.SetWidth(max(0, width-lipgloss.Width(p.model.Prompt)-paddedBorderWidth))
 	// Render a prompt, surrounded by a padded red border, spanning the width of the
 	// terminal, accounting for width of border. Inline and MaxWidth ensures the
 	// prompt remains on a single line.

@@ -2,14 +2,15 @@ package table
 
 import (
 	"fmt"
+	"image/color"
 	"slices"
 	"strconv"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/tui"
@@ -35,7 +36,7 @@ type Model[V resource.Identifiable] struct {
 	rendered    map[resource.ID]RenderedRow
 
 	border      lipgloss.Border
-	borderColor lipgloss.TerminalColor
+	borderColor color.Color
 
 	currentRowIndex int
 	currentRowID    resource.ID
@@ -174,7 +175,7 @@ func (m Model[V]) visibleRows() int {
 // Update is the Bubble Tea update loop.
 func (m Model[V]) Update(msg tea.Msg) (Model[V], tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Navigation.LineUp):
 			m.MoveUp(1)
@@ -230,7 +231,7 @@ func (m Model[V]) Update(msg tea.Msg) (Model[V], tea.Cmd) {
 		return m, nil
 	case tui.FilterKeyMsg:
 		// unwrap key and send to filter widget
-		kmsg := tea.KeyMsg(msg)
+		kmsg := tea.KeyPressMsg(msg)
 		var cmd tea.Cmd
 		m.filter, cmd = m.filter.Update(kmsg)
 		// Filter table items
@@ -259,7 +260,7 @@ func (m *Model[V]) PreviewCurrentRow() (tui.Kind, resource.ID, bool) {
 }
 
 // View renders the table.
-func (m Model[V]) View() string {
+func (m Model[V]) View() tea.View {
 	// Table is composed of a vertical stack of components:
 	// (a) optional filter widget
 	// (b) header
@@ -292,7 +293,7 @@ func (m Model[V]) View() string {
 		Height(m.height).
 		MaxHeight(m.height).
 		Render(lipgloss.JoinVertical(lipgloss.Top, components...))
-	return content
+	return tea.NewView(content)
 }
 
 // Metadata renders a short string summarizing table row metadata.
@@ -310,9 +311,9 @@ func (m *Model[V]) Metadata() string {
 	return metadata
 }
 
-func (m *Model[V]) SetBorderStyle(border lipgloss.Border, color lipgloss.TerminalColor) {
+func (m *Model[V]) SetBorderStyle(border lipgloss.Border, colorVal color.Color) {
 	m.border = border
-	m.borderColor = color
+	m.borderColor = colorVal
 }
 
 // CurrentRow returns the current row the user has highlighted.  If the table is
@@ -583,8 +584,8 @@ func (m *Model[V]) renderRow(rowIdx int) string {
 	row := m.rows[rowIdx]
 
 	var (
-		background lipgloss.Color
-		foreground lipgloss.Color
+		background = tui.Black
+		foreground = tui.White
 		current    bool
 		selected   bool
 	)

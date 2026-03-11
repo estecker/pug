@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 func TestTerragrunt_SingleInit(t *testing.T) {
@@ -62,7 +62,7 @@ func TestTerragrunt_Dependencies(t *testing.T) {
 	tm := setupAndInitTerragruntModulesWithDependencies(t)
 
 	// Select all modules and create apply on each
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("a")
 
 	// Give approval
@@ -167,7 +167,7 @@ func setupAndInitTerragruntModulesWithDependencies(t *testing.T) *testModel {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "init 6/6") &&
@@ -183,7 +183,7 @@ func setupAndInitTerragruntModulesWithDependencies(t *testing.T) *testModel {
 
 	// Go back to explorer and clear selection.
 	tm.Type("0")
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlBackslash})
+	tm.Send(tea.KeyPressMsg{Code: '\\', Mod: tea.ModCtrl})
 
 	return tm
 }

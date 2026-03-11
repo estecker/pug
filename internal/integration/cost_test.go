@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/app"
 	"github.com/stretchr/testify/require"
 )
@@ -21,10 +21,10 @@ func TestCost(t *testing.T) {
 	tm := setupInfracostWorkspaces(t)
 
 	// Navigate explorer cursor to first workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Calculate cost for all four workspaces
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("$")
 
 	// Wait for infracost task to produce overall total. Each workspace in the
@@ -68,7 +68,7 @@ func setupInfracostWorkspaces(t *testing.T) *testModel {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	waitFor(t, tm, func(s string) bool {
@@ -83,7 +83,7 @@ func setupInfracostWorkspaces(t *testing.T) *testModel {
 	tm.Type("0")
 
 	// Clear selection
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlBackslash})
+	tm.Send(tea.KeyPressMsg{Code: '\\', Mod: tea.ModCtrl})
 
 	return tm
 }

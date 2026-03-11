@@ -1,7 +1,7 @@
 package tui
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/resource"
 )
 
@@ -54,4 +54,4 @@ type FilterBlurMsg struct{}
 type FilterCloseMsg struct{}
 
 // FilterKeyMsg is a key entered by the user into the filter widget
-type FilterKeyMsg tea.KeyMsg
+type FilterKeyMsg tea.KeyPressMsg

@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/cursor"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/cursor"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/leg100/pug/internal/app"
 	"github.com/leg100/pug/internal/module"
@@ -62,10 +62,6 @@ func newModel(cfg app.Config, app *app.App) (model, error) {
 			return model{}, err
 		}
 	}
-
-	// Work-around for
-	// https://github.com/charmbracelet/bubbletea/issues/1036#issuecomment-2158563056
-	_ = lipgloss.HasDarkBackground()
 
 	helpers := &tui.Helpers{
 		Modules:    app.Modules,
@@ -155,7 +151,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			Width:  m.viewWidth(),
 		})
 		return m, tea.Batch(cmd, blink)
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		// Pressing any key makes any info/error message in the footer disappear
 		m.info = ""
 		m.err = nil
@@ -276,7 +272,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	// Start composing vertical stack of components that fill entire terminal.
 	var components []string
 
@@ -288,7 +284,7 @@ func (m model) View() string {
 	components = append(components, lipgloss.NewStyle().
 		Height(m.viewHeight()).
 		Width(m.viewWidth()).
-		Render(m.PaneManager.View()),
+		Render(m.PaneManager.View().Content),
 	)
 	// Add help if enabled
 	if m.showHelp {
@@ -323,7 +319,10 @@ func (m model) View() string {
 		Width(m.width).
 		Render(footer),
 	)
-	return strings.Join(components, "\n")
+
+	v := tea.NewView(strings.Join(components, "\n"))
+	v.AltScreen = true
+	return v
 }
 
 var (

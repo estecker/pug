@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 func TestHistory(t *testing.T) {
@@ -19,7 +19,7 @@ func TestHistory(t *testing.T) {
 	})
 
 	// Try go back but get error
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEsc})
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "already at first page")
 	})
@@ -31,13 +31,13 @@ func TestHistory(t *testing.T) {
 	})
 
 	// Go back, expect task list
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEsc})
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "tasks")
 	})
 
 	// Try go back but get error
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEsc})
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "already at first page")
 	})
@@ -52,7 +52,7 @@ func TestHistory(t *testing.T) {
 	})
 
 	// Go back, expect task list
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEsc})
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "tasks")
 	})

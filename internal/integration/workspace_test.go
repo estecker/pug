@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 func TestWorkspace_SetCurrentWorkspace(t *testing.T) {
@@ -16,8 +16,8 @@ func TestWorkspace_SetCurrentWorkspace(t *testing.T) {
 	// module, and default - the current workspace - should be the next child -
 	// and then the workspace we want to set as the new current workspace - dev
 	// - is the last child.
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Make dev the current workspace
 	tm.Type("C")
@@ -35,7 +35,7 @@ func TestWorkspace_SinglePlan(t *testing.T) {
 	tm := setupAndInitModule_Explorer(t)
 
 	// Place cursor on workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Create plan on default workspace
 	tm.Type("p")
@@ -53,10 +53,10 @@ func TestWorkspace_MultiplePlans(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Place cursor on module a's default workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Create plan on all four workspaces
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("p")
 
 	waitFor(t, tm, func(s string) bool {
@@ -74,7 +74,7 @@ func TestWorkspace_SingleApply(t *testing.T) {
 	tm := setupAndInitModule_Explorer(t)
 
 	// Place cursor on workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Create apply on workspace
 	tm.Type("a")
@@ -98,10 +98,10 @@ func TestWorkspace_MultipleApplies(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Place cursor on module a's default workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Create apply on all four workspaces
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("a")
 
 	// Give approval
@@ -145,7 +145,7 @@ func TestWorkspace_SingleDestroy(t *testing.T) {
 
 	// Go back to explorer and place cursor on default workspace
 	tm.Type("0")
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 	tm.Type("D")
 
 	// Give approval
@@ -176,7 +176,7 @@ func TestWorkspace_MultipleDestroy(t *testing.T) {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Each module should now be populated with at least one workspace.
@@ -186,10 +186,10 @@ func TestWorkspace_MultipleDestroy(t *testing.T) {
 
 	// Go back to explorer and place cursor on default workspace
 	tm.Type("0")
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Destroy all resources on all three workspaces
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("D")
 
 	// Give approval
@@ -216,11 +216,11 @@ func TestWorkspace_Delete(t *testing.T) {
 	// module, and default - the current workspace - should be the next child -
 	// and then the workspace we want to set as the new current workspace - dev
 	// - is the last child.
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Delete dev workspace
-	tm.Send(tea.KeyMsg{Type: tea.KeyDelete})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDelete})
 
 	// Give approval
 	waitFor(t, tm, func(s string) bool {

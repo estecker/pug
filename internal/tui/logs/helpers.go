@@ -1,12 +1,11 @@
 package logs
 
 import (
-	"github.com/charmbracelet/lipgloss"
 	"github.com/leg100/pug/internal/tui"
 )
 
 func coloredLogLevel(level string) string {
-	var levelColor lipgloss.TerminalColor
+	levelColor := tui.InfoLogLevel
 	switch level {
 	case "ERROR":
 		levelColor = tui.ErrorLogLevel

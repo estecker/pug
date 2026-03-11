@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 func TestLogs(t *testing.T) {
@@ -36,10 +36,10 @@ func TestLogs(t *testing.T) {
 	tm.Type("reloaded modules")
 
 	// Exit filter prompt
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	// Drill down into log message
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	// Expect a table of keys and values
 	waitFor(t, tm, func(s string) bool {

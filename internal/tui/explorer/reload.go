@@ -3,7 +3,7 @@ package explorer
 import (
 	"fmt"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/module"
 	"github.com/leg100/pug/internal/tui"
 )

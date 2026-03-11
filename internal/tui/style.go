@@ -1,6 +1,6 @@
 package tui
 
-import "github.com/charmbracelet/lipgloss"
+import "charm.land/lipgloss/v2"
 
 var (
 	Regular = lipgloss.NewStyle()
@@ -10,9 +10,6 @@ var (
 	Border      = Regular.Border(lipgloss.NormalBorder())
 	ThickBorder = Regular.Border(lipgloss.ThickBorder()).BorderForeground(Violet)
 
-	ModuleStyle = Regular.Foreground(lipgloss.AdaptiveColor{
-		Dark:  string(LightishBlue),
-		Light: "27",
-	})
+	ModuleStyle    = Regular.Foreground(LightishBlue)
 	WorkspaceStyle = Regular.Foreground(Purple)
 )

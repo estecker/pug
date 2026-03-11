@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal"
 	"github.com/stretchr/testify/require"
 )
@@ -17,7 +17,7 @@ func TestState_SingleTaint_Untaint(t *testing.T) {
 	tm := setupState(t)
 
 	// Taint first resource, which should be random_pet.pet[0]
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlT})
+	tm.Send(tea.KeyPressMsg{Code: 't', Mod: tea.ModCtrl})
 
 	// Expect short message in footer.
 	waitFor(t, tm, func(s string) bool {
@@ -41,8 +41,8 @@ func TestState_MultipleTaint_Untaint(t *testing.T) {
 	tm := setupState(t)
 
 	// Taint all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlT})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
+	tm.Send(tea.KeyPressMsg{Code: 't', Mod: tea.ModCtrl})
 
 	// Expect to be taken to task group page for taint
 	waitFor(t, tm, func(s string) bool {
@@ -75,7 +75,7 @@ func TestState_MultipleTaint_Untaint(t *testing.T) {
 
 	// Untaint all resources (need to select all again, because resources have
 	// been reloaded).
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("U")
 
 	// Expect to be taken to task group page for untaint
@@ -99,14 +99,14 @@ func TestState_Move(t *testing.T) {
 	})
 
 	// Delete resource name pet[0] and replace with giraffe[99]
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
 	tm.Type("giraffe[99]")
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	// Expect short message in footer.
 	waitFor(t, tm, func(s string) bool {
@@ -121,7 +121,7 @@ func TestState_SingleDelete(t *testing.T) {
 	tm := setupState(t)
 
 	// Delete first resource
-	tm.Send(tea.KeyMsg{Type: tea.KeyDelete})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDelete})
 
 	// Confirm deletion
 	waitFor(t, tm, func(s string) bool {
@@ -143,8 +143,8 @@ func TestState_MultipleDelete(t *testing.T) {
 	tm := setupState(t)
 
 	// Delete all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
-	tm.Send(tea.KeyMsg{Type: tea.KeyDelete})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDelete})
 
 	// Confirm deletion
 	waitFor(t, tm, func(s string) bool {
@@ -186,7 +186,7 @@ func TestState_TargetedPlan_MultipleResource(t *testing.T) {
 	tm := setupState(t)
 
 	// Create targeted plan for all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("p")
 
 	// Expect to be taken to the task page for the plan, with a completed plan,
@@ -226,7 +226,7 @@ func TestState_TargetedPlanDestroy_MultipleResource(t *testing.T) {
 	tm := setupState(t)
 
 	// Create targeted destroy plan for all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("d")
 
 	// Expect to be taken to the task page for the destroy plan, with a
@@ -272,7 +272,7 @@ func TestState_TargetedApply_MultipleResource(t *testing.T) {
 	tm := setupState(t)
 
 	// Create targeted apply for all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("a")
 
 	// Give approval
@@ -323,7 +323,7 @@ func TestState_TargetedDestroy_MultipleResource(t *testing.T) {
 	tm := setupState(t)
 
 	// Create targeted destroy for all resources
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("D")
 
 	// Give approval
@@ -377,7 +377,7 @@ func TestState_Reload(t *testing.T) {
 	require.NoError(t, err)
 
 	// Reload state
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlR})
+	tm.Send(tea.KeyPressMsg{Code: 'r', Mod: tea.ModCtrl})
 
 	// Expect reduced number of resources
 	waitFor(t, tm, func(s string) bool {
@@ -421,7 +421,7 @@ func TestState_ViewResource(t *testing.T) {
 	tm := setupState(t)
 
 	// Press enter to view resource, which should be random_pet.pet[0]
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, `resource random_pet.pet[0]`)
@@ -434,7 +434,7 @@ func TestState_ViewResourceTargetPlan(t *testing.T) {
 	tm := setupState(t)
 
 	// Press enter to view resource, which should be random_pet.pet[0]
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, `resource random_pet.pet[0]`)

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 // pane models expose metadata to be embedded in certain positions in borders:
@@ -49,14 +49,15 @@ func borderize(content string, active bool, embeddedText map[BorderPosition]stri
 			true:  lipgloss.Border(lipgloss.ThickBorder()),
 			false: lipgloss.Border(lipgloss.NormalBorder()),
 		}
-		color = map[bool]lipgloss.TerminalColor{
-			true:  Blue,
-			false: InactivePreviewBorder,
-		}
+		colorVal = Blue
 		border = thickness[active]
-		style  = lipgloss.NewStyle().Foreground(color[active])
+		style  = lipgloss.NewStyle()
 		width  = lipgloss.Width(content)
 	)
+	if !active {
+		colorVal = InactivePreviewBorder
+	}
+	style = style.Foreground(colorVal)
 
 	encloseInSquareBrackets := func(text string) string {
 		if text != "" {
@@ -101,7 +102,7 @@ func borderize(content string, active bool, embeddedText map[BorderPosition]stri
 			border.TopRight,
 		),
 		lipgloss.NewStyle().
-			BorderForeground(color[active]).
+			BorderForeground(colorVal).
 			Border(border, false, true, false, true).Render(content),
 		buildHorizontalBorder(
 			embeddedText[BottomLeftBorder],

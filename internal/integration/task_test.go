@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal"
 	"github.com/stretchr/testify/require"
 )
@@ -27,7 +27,7 @@ func TestTask_LongRunningTasks(t *testing.T) {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Expect init task group with 3 successful tasks.
@@ -132,7 +132,7 @@ func TestTask_MultipleApply(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Create plan on all modules
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("p")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "plan 3/3") &&
@@ -142,7 +142,7 @@ func TestTask_MultipleApply(t *testing.T) {
 	})
 
 	// Select all tasks in group and apply
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("a")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "Apply 3 plans? (y/N):")
@@ -198,7 +198,7 @@ func TestTask_RetryMultiple(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Create plan for all modules
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("p")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "plan 3/3") &&
@@ -208,7 +208,7 @@ func TestTask_RetryMultiple(t *testing.T) {
 	})
 
 	// Retry all plan tasks.
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("r")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "Retry 3 tasks? (y/N):")
@@ -288,7 +288,7 @@ func TestTask_CancelMultiple(t *testing.T) {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Expect init task group with 3 successful tasks.
@@ -318,7 +318,7 @@ func TestTask_CancelMultiple(t *testing.T) {
 	})
 
 	// Cancel plans
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("c")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "Cancel 3 tasks? (y/N):")

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal"
 	"github.com/leg100/pug/internal/logging"
 	"github.com/leg100/pug/internal/module"
@@ -199,22 +199,22 @@ func WorkspaceNameWithIcon(name string, squareBrackets bool) string {
 
 // TaskStatus provides a rendered colored task status.
 func (h *Helpers) TaskStatus(t *task.Task, table bool) string {
-	var color lipgloss.Color
+	var colorVal = Grey
 
 	switch t.State {
 	case task.Pending:
-		color = Grey
+		colorVal = Grey
 	case task.Queued:
-		color = Orange
+		colorVal = Orange
 	case task.Running:
-		color = Blue
+		colorVal = Blue
 	case task.Exited:
-		color = GreenBlue
+		colorVal = GreenBlue
 	case task.Errored:
-		color = Red
+		colorVal = Red
 	}
 
-	return Regular.Foreground(color).Render(string(t.State))
+	return Regular.Foreground(colorVal).Render(string(t.State))
 }
 
 // TaskSummary renders a summary of the task's outcome.
@@ -262,7 +262,7 @@ func (h *Helpers) WorkspaceReloadReport(report workspace.ReloadSummary, inherit 
 // StateReloadReport renders a colored summary of changes resulting from a
 // workspace reload.
 func (h *Helpers) StateReloadReport(report state.ReloadSummary, inherit lipgloss.Style) string {
-	var foreground lipgloss.TerminalColor
+	foreground := Grey
 	switch report {
 	case state.Empty:
 		foreground = Red

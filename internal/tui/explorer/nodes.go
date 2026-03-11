@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/tui"
 )
