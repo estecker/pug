@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal"
 )
 
@@ -30,7 +30,7 @@ func TestModule_Reload(t *testing.T) {
 	})
 
 	// Reload modules
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlR})
+	tm.Send(tea.KeyPressMsg{Code: 'r', Mod: tea.ModCtrl})
 
 	// Expect message to inform user that reload has finished and no modules
 	// have been added nor removed.
@@ -45,7 +45,7 @@ func TestModuleList_ReloadWorkspacesSingleModule(t *testing.T) {
 	tm := setupAndInitModule_Explorer(t)
 
 	// Reload workspaces for module
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlW})
+	tm.Send(tea.KeyPressMsg{Code: 'w', Mod: tea.ModCtrl})
 
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "workspace list 󰠱 modules/a") &&
@@ -59,8 +59,8 @@ func TestModuleList_ReloadWorkspacesMultipleModules(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Select all modules and reload workspaces for each and every module
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlW})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
+	tm.Send(tea.KeyPressMsg{Code: 'w', Mod: tea.ModCtrl})
 
 	waitFor(t, tm, func(s string) bool {
 		return matchPattern(t, "workspace list 3/3", s) &&
@@ -107,7 +107,7 @@ func TestExplorer_MultipleInit(t *testing.T) {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Expect init task group with 3 successful tasks
@@ -178,7 +178,7 @@ func TestExplorer_MultipleFormat(t *testing.T) {
 	})
 
 	// Format all modules
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("f")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "fmt 3/3") &&
@@ -212,7 +212,7 @@ func TestExplorer_MultipleValidate(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Validate all modules
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("v")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "validate 3/3") &&
@@ -241,7 +241,7 @@ func TestExplorer_MultiplePlans(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Select all modules and invoke plan.
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("p")
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "plan 3/3") &&
@@ -277,7 +277,7 @@ func TestExplorer_MultipleApplies(t *testing.T) {
 	tm := setupAndInitMultipleModules(t)
 
 	// Select all modules and invoke applies.
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("a")
 
 	// Give approval
@@ -385,7 +385,7 @@ func TestExplorer_MultipleDestroys(t *testing.T) {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Each module should now be populated with at least one workspace.
@@ -397,7 +397,7 @@ func TestExplorer_MultipleDestroys(t *testing.T) {
 	tm.Type("0")
 
 	// Select all modules and invoke destroy.
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("D")
 
 	// Give approval
@@ -477,7 +477,7 @@ func TestExplorer_MultipleExecute(t *testing.T) {
 	})
 
 	// Select all modules and run program in each module directory.
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("x")
 
 	// Expect prompt for program to run.
@@ -485,7 +485,7 @@ func TestExplorer_MultipleExecute(t *testing.T) {
 		return strings.Contains(s, "Execute program in 3 module directories: ")
 	})
 	tm.Type("terraform version\n")
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	waitFor(t, tm, func(s string) bool {
 		return strings.Contains(s, "terraform 3/3") &&
@@ -533,7 +533,7 @@ func setupAndInitMultipleModules(t *testing.T) *testModel {
 	})
 
 	// Select all modules and init
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlA})
+	tm.Send(tea.KeyPressMsg{Code: 'a', Mod: tea.ModCtrl})
 	tm.Type("i")
 
 	// Expect init task group with 3 successful tasks.
@@ -550,7 +550,7 @@ func setupAndInitMultipleModules(t *testing.T) *testModel {
 	tm.Type("0")
 
 	// Clear selection
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlBackslash})
+	tm.Send(tea.KeyPressMsg{Code: '\\', Mod: tea.ModCtrl})
 
 	return tm
 }

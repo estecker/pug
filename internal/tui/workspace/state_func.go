@@ -1,7 +1,7 @@
 package workspace
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/state"
 	"github.com/leg100/pug/internal/task"

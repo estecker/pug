@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/exec"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 // NavigateTo sends an instruction to navigate to a page with the given model

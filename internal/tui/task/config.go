@@ -3,8 +3,8 @@ package task
 import (
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/tui"
 	"github.com/leg100/pug/internal/tui/keys"
 )
@@ -28,7 +28,7 @@ type (
 // Update updates global configuration of tasks.
 func (c *Config) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Global.Autoscroll):
 			c.disableAutoscroll = !c.disableAutoscroll

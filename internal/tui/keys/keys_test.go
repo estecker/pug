@@ -3,8 +3,8 @@ package keys
 import (
 	"testing"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/viewport"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/viewport"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +13,7 @@ func Test_keyMapToSlice(t *testing.T) {
 	want := []key.Binding(
 		[]key.Binding{
 			key.NewBinding(
-				key.WithKeys("pgdown", " ", "f"),
+				key.WithKeys("pgdown", "space", "f"),
 				key.WithHelp("f/pgdn", "page down"),
 			),
 			key.NewBinding(

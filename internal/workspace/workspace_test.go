@@ -18,7 +18,7 @@ func TestWorkspace_TerraformEnv(t *testing.T) {
 	assert.Equal(t, "TF_WORKSPACE=dev", ws.TerraformEnv())
 }
 
-func TestWorkspace_VarsFile(t *testing.T) {
+func TestWorkspace_VarFiles(t *testing.T) {
 	workdir := internal.NewTestWorkdir(t)
 	mod := module.New(module.Options{Path: "a/b/c"})
 	ws, err := New(mod, "dev")
@@ -30,7 +30,7 @@ func TestWorkspace_VarsFile(t *testing.T) {
 	_, err = os.Create(path)
 	require.NoError(t, err)
 
-	got, ok := ws.VarsFile(workdir)
+	got, ok := ws.VarFiles(workdir, "")
 	require.True(t, ok)
 	assert.Equal(t, "dev.tfvars", got)
 }

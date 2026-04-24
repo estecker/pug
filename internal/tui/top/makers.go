@@ -1,7 +1,7 @@
 package top
 
 import (
-	"github.com/charmbracelet/bubbles/spinner"
+	"charm.land/bubbles/v2/spinner"
 	"github.com/leg100/pug/internal/app"
 	"github.com/leg100/pug/internal/tui"
 	"github.com/leg100/pug/internal/tui/explorer"

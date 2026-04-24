@@ -1,8 +1,8 @@
 package logs
 
 import (
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/logging"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/tui"
@@ -96,7 +96,7 @@ func (m *model) Update(msg tea.Msg) tea.Cmd {
 	return cmd
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	return m.table.View()
 }
 

@@ -34,6 +34,7 @@ type ServiceOptions struct {
 	States     *state.Service
 	DataDir    string
 	Workdir    internal.Workdir
+	Tfvars     string
 	Logger     logging.Interface
 	Terragrunt bool
 }
@@ -59,6 +60,7 @@ func NewService(opts ServiceOptions) *Service {
 		factory: &factory{
 			dataDir:    opts.DataDir,
 			workdir:    opts.Workdir,
+			tfvars:     opts.Tfvars,
 			modules:    opts.Modules,
 			workspaces: opts.Workspaces,
 			broker:     broker,

@@ -65,6 +65,7 @@ func New(cfg Config) (*App, error) {
 		Logger:  logger,
 		DataDir: cfg.DataDir,
 		Workdir: cfg.Workdir,
+		Tfvars:  cfg.Tfvars,
 	})
 	states := state.NewService(state.ServiceOptions{
 		Modules:    modules,
@@ -79,6 +80,7 @@ func New(cfg Config) (*App, error) {
 		States:     states,
 		DataDir:    cfg.DataDir,
 		Workdir:    cfg.Workdir,
+		Tfvars:     cfg.Tfvars,
 		Logger:     logger,
 		Terragrunt: cfg.Terragrunt,
 	})

@@ -3,8 +3,8 @@ package logs
 import (
 	"strings"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"github.com/leg100/pug/internal/logging"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/tui"
@@ -96,7 +96,7 @@ func (m *list) Update(msg tea.Msg) tea.Cmd {
 	)
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, localKeys.Enter):
 			if row, ok := m.CurrentRow(); ok {
@@ -119,7 +119,7 @@ func (m list) BorderText() map[tui.BorderPosition]string {
 	}
 }
 
-func (m list) View() string {
+func (m list) View() tea.View {
 	return m.Model.View()
 }
 

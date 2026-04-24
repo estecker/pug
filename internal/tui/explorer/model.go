@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/cursor"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/cursor"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal"
 	"github.com/leg100/pug/internal/module"
 	"github.com/leg100/pug/internal/resource"
@@ -84,7 +84,7 @@ func (m *model) Init() tea.Cmd {
 
 func (m *model) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Navigation.LineUp):
 			m.tracker.moveCursor(-1, m.treeHeight())
@@ -183,7 +183,7 @@ func (m *model) Update(msg tea.Msg) tea.Cmd {
 		return m.buildTree
 	case tui.FilterKeyMsg:
 		// unwrap key and send to filter widget
-		kmsg := tea.KeyMsg(msg)
+		kmsg := tea.KeyPressMsg(msg)
 		var blink tea.Cmd
 		m.filter, blink = m.filter.Update(kmsg)
 		// Filter table items
@@ -209,9 +209,9 @@ func (m model) treeHeight() int {
 	return m.height
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	if m.tree == nil {
-		return "building tree"
+		return tea.NewView("building tree")
 	}
 	var content string
 	if m.filterVisible() {
@@ -232,8 +232,8 @@ func (m model) View() string {
 		// Style node according to whether it is the cursor node, selected, or
 		// both
 		var (
-			background lipgloss.Color
-			foreground lipgloss.Color
+			background = tui.Black
+			foreground = tui.White
 			current    = node.ID() == m.tracker.cursorNode.ID()
 			selected   = m.tracker.isSelected(node)
 		)
@@ -263,7 +263,7 @@ func (m model) View() string {
 		strings.Join(visibleLines, "\n"),
 		scrollbar,
 	)
-	return content
+	return tea.NewView(content)
 }
 
 func (m model) BorderText() map[tui.BorderPosition]string {

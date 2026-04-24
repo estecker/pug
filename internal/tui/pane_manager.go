@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/tui/keys"
 	"golang.org/x/exp/maps"
@@ -79,7 +79,7 @@ func (p *PaneManager) Init() tea.Cmd {
 func (p *PaneManager) Update(msg tea.Msg) tea.Cmd {
 	var cmds []tea.Cmd
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Common.Back):
 			if p.focused != TopRightPane {
@@ -307,8 +307,8 @@ func (m *PaneManager) paneHeight(position Position) int {
 	return m.height
 }
 
-func (m *PaneManager) View() string {
-	return lipgloss.JoinHorizontal(lipgloss.Top,
+func (m *PaneManager) View() tea.View {
+	return tea.NewView(lipgloss.JoinHorizontal(lipgloss.Top,
 		removeEmptyStrings(
 			m.renderPane(LeftPane),
 			lipgloss.JoinVertical(lipgloss.Top,
@@ -318,7 +318,7 @@ func (m *PaneManager) View() string {
 				)...,
 			),
 		)...,
-	)
+	))
 }
 
 func (m *PaneManager) renderPane(position Position) string {
@@ -327,11 +327,12 @@ func (m *PaneManager) renderPane(position Position) string {
 	}
 	model := m.panes[position].model
 	isFocused := position == m.focused
+	view := model.View()
 	renderedPane := lipgloss.NewStyle().
 		Width(m.paneWidth(position) - 2).    // -2 for border
 		Height(m.paneHeight(position) - 2).  // -2 for border
 		MaxWidth(m.paneWidth(position) - 2). // -2 for border
-		Render(model.View())
+		Render(view.Content)
 	// Optionally, the pane model can embed text in its borders.
 	borderTexts := make(map[BorderPosition]string)
 	if textInBorder, ok := model.(interface {

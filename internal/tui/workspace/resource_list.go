@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/leg100/pug/internal/plan"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/state"
@@ -120,7 +120,7 @@ func (m *resourceList) Update(msg tea.Msg) tea.Cmd {
 			return tui.ReportError(fmt.Errorf("reloading state failed: %w", msg.err))
 		}
 		return tui.ReportInfo("reloading finished")
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, resourcesKeys.Enter):
 			if row, ok := m.CurrentRow(); ok {
@@ -227,12 +227,12 @@ func (m *resourceList) Update(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m resourceList) View() string {
+func (m resourceList) View() tea.View {
 	if m.reloading {
-		return fmt.Sprintf("Pulling state %s", m.spinner.View())
+		return tea.NewView(fmt.Sprintf("Pulling state %s", m.spinner.View()))
 	}
 	if m.state == nil || m.state.Serial < 0 {
-		return "No state found"
+		return tea.NewView("No state found")
 	}
 	return m.Model.View()
 }

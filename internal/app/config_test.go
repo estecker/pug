@@ -41,7 +41,7 @@ func TestConfig(t *testing.T) {
 				require.NoError(t, err)
 
 				want := Config{
-					Program:  "terraform",
+					Program:  "tofu",
 					MaxTasks: 2 * runtime.NumCPU(),
 					Workdir:  wd,
 					DataDir:  filepath.Join(os.Getenv("HOME"), ".pug"),

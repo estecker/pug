@@ -3,7 +3,7 @@ package keys
 import (
 	"reflect"
 
-	"github.com/charmbracelet/bubbles/key"
+	"charm.land/bubbles/v2/key"
 )
 
 // KeyMapToSlice takes a struct of fields of type key.Binding and returns it as

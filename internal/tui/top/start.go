@@ -5,12 +5,47 @@ import (
 	"sync"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
+	teav1 "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
 	"github.com/leg100/pug/internal/app"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/stretchr/testify/require"
 )
+
+// modelAdapter adapts our v2 model to the v1 interface for teatest
+type modelAdapter struct {
+	v2Model model
+}
+
+func (a modelAdapter) Init() teav1.Cmd {
+	cmd := a.v2Model.Init()
+	if cmd == nil {
+		return nil
+	}
+	// Wrap the v2 cmd to return v1 msg
+	return func() teav1.Msg {
+		msg := cmd()
+		return msg
+	}
+}
+
+func (a modelAdapter) Update(msg teav1.Msg) (teav1.Model, teav1.Cmd) {
+	newModel, cmd := a.v2Model.Update(msg)
+	a.v2Model = newModel.(model)
+	if cmd == nil {
+		return a, nil
+	}
+	// Wrap the v2 cmd to return v1 msg
+	return a, func() teav1.Msg {
+		msg := cmd()
+		return msg
+	}
+}
+
+func (a modelAdapter) View() string {
+	return a.v2Model.View().Content
+}
 
 // Start starts the TUI and blocks until the user exits.
 func Start(cfg app.Config) error {
@@ -25,16 +60,12 @@ func Start(cfg app.Config) error {
 		return err
 	}
 
-	p := tea.NewProgram(m,
-		// Use the full size of the terminal with its "alternate screen buffer"
-		tea.WithAltScreen(),
-		// Enabling mouse cell motion removes the ability to "blackboard" text
-		// with the mouse, which is useful for then copying text into the
-		// clipboard. Therefore we've decided to disable it and leave it
-		// commented out for posterity.
-		//
-		// tea.WithMouseCellMotion(),
-	)
+	p := tea.NewProgram(m)// Enabling mouse cell motion removes the ability to "blackboard" text
+	// with the mouse, which is useful for then copying text into the
+	// clipboard. Therefore we've decided to disable it and leave it
+	// commented out for posterity.
+	//
+	// tea.WithMouseCellMotion(),
 
 	ch, unsub := setupSubscriptions(app, cfg)
 	defer unsub()
@@ -65,7 +96,9 @@ func StartTest(t *testing.T, cfg app.Config, width, height int) *teatest.TestMod
 	ch, unsub := setupSubscriptions(app, cfg)
 	t.Cleanup(unsub)
 
-	tm := teatest.NewTestModel(t, m, teatest.WithInitialTermSize(width, height))
+	// Wrap our v2 model with an adapter for teatest (which still uses v1 API)
+	adapter := modelAdapter{v2Model: m}
+	tm := teatest.NewTestModel(t, adapter, teatest.WithInitialTermSize(width, height))
 
 	// Relay events to model in background
 	go func() {

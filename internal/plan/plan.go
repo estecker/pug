@@ -49,6 +49,7 @@ type CreateOptions struct {
 type factory struct {
 	dataDir    string
 	workdir    internal.Workdir
+	tfvars     string
 	modules    moduleGetter
 	workspaces workspaceGetter
 	broker     *pubsub.Broker[*plan]
@@ -85,7 +86,7 @@ func (f *factory) newPlan(workspaceID resource.ID, opts CreateOptions) (*plan, e
 	for _, addr := range plan.TargetAddrs {
 		plan.targetArgs = append(plan.targetArgs, fmt.Sprintf("-target=%s", addr))
 	}
-	if fname, ok := ws.VarsFile(f.workdir); ok {
+	if fname, ok := ws.VarFiles(f.workdir, f.tfvars); ok {
 		flag := fmt.Sprintf("-var-file=%s", fname)
 		plan.varsFileArg = &flag
 	}

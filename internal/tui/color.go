@@ -1,8 +1,8 @@
 package tui
 
-import "github.com/charmbracelet/lipgloss"
+import "charm.land/lipgloss/v2"
 
-const (
+var (
 	Black           = lipgloss.Color("#000000")
 	DarkRed         = lipgloss.Color("#FF0000")
 	Red             = lipgloss.Color("#FF5353")
@@ -32,25 +32,17 @@ const (
 
 var (
 	DebugLogLevel = Blue
-	InfoLogLevel  = lipgloss.AdaptiveColor{Dark: string(Turquoise), Light: string(Green)}
+	InfoLogLevel  = Turquoise // In v2, just use the color directly or handle profile in renderer
 	ErrorLogLevel = Red
 	WarnLogLevel  = Yellow
 
-	LogRecordAttributeKey = lipgloss.AdaptiveColor{Dark: string(LightGrey), Light: string(LightGrey)}
+	LogRecordAttributeKey = LightGrey
 
-	HelpKey = lipgloss.AdaptiveColor{
-		Dark:  "ff",
-		Light: "",
-	}
-	HelpDesc = lipgloss.AdaptiveColor{
-		Dark:  "248",
-		Light: "246",
-	}
+	HelpKey = lipgloss.Color("ff")
 
-	InactivePreviewBorder = lipgloss.AdaptiveColor{
-		Dark:  "244",
-		Light: "250",
-	}
+	HelpDesc = lipgloss.Color("248")
+
+	InactivePreviewBorder = lipgloss.Color("244")
 
 	CurrentBackground            = Grey
 	CurrentForeground            = White
@@ -59,16 +51,10 @@ var (
 	CurrentAndSelectedBackground = lipgloss.Color("117")
 	CurrentAndSelectedForeground = Black
 
-	TitleColor = lipgloss.AdaptiveColor{
-		Dark:  "",
-		Light: "",
-	}
+	TitleColor = lipgloss.Color("")
 
 	GroupReportBackgroundColor = EvenLighterGrey
 	TaskSummaryBackgroundColor = EvenLighterGrey
 
-	ScrollPercentageBackground = lipgloss.AdaptiveColor{
-		Dark:  string(DarkGrey),
-		Light: string(EvenLighterGrey),
-	}
+	ScrollPercentageBackground = DarkGrey
 )

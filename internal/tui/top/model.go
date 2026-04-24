@@ -7,11 +7,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/cursor"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/cursor"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/leg100/pug/internal/app"
 	"github.com/leg100/pug/internal/module"
@@ -20,7 +20,6 @@ import (
 	"github.com/leg100/pug/internal/tui"
 	"github.com/leg100/pug/internal/tui/keys"
 	tuitask "github.com/leg100/pug/internal/tui/task"
-	"github.com/leg100/pug/internal/version"
 )
 
 // pug is in one of several modes, which alter how all messages are handled.
@@ -44,6 +43,7 @@ type model struct {
 	prompt     *tui.Prompt
 	dump       *os.File
 	workdir    string
+	program    string
 	tasks      *task.Service
 	spinner    *spinner.Model
 	spinning   bool
@@ -62,10 +62,6 @@ func newModel(cfg app.Config, app *app.App) (model, error) {
 			return model{}, err
 		}
 	}
-
-	// Work-around for
-	// https://github.com/charmbracelet/bubbletea/issues/1036#issuecomment-2158563056
-	_ = lipgloss.HasDarkBackground()
 
 	helpers := &tui.Helpers{
 		Modules:    app.Modules,
@@ -88,6 +84,7 @@ func newModel(cfg app.Config, app *app.App) (model, error) {
 		tasks:       app.Tasks,
 		dump:        dump,
 		workdir:     cfg.Workdir.PrettyString(),
+		program:     cfg.Program,
 		taskConfig:  taskConfig,
 	}
 	return m, nil
@@ -155,7 +152,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			Width:  m.viewWidth(),
 		})
 		return m, tea.Batch(cmd, blink)
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		// Pressing any key makes any info/error message in the footer disappear
 		m.info = ""
 		m.err = nil
@@ -276,7 +273,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	// Start composing vertical stack of components that fill entire terminal.
 	var components []string
 
@@ -288,7 +285,7 @@ func (m model) View() string {
 	components = append(components, lipgloss.NewStyle().
 		Height(m.viewHeight()).
 		Width(m.viewWidth()).
-		Render(m.PaneManager.View()),
+		Render(m.PaneManager.View().Content),
 	)
 	// Add help if enabled
 	if m.showHelp {
@@ -315,7 +312,7 @@ func (m model) View() string {
 			Width(m.availableFooterMsgWidth()).
 			Render(m.info)
 	}
-	footer += versionWidget
+	footer += m.commandWidget()
 	// Add footer
 	components = append(components, tui.Regular.
 		Inline(true).
@@ -323,13 +320,35 @@ func (m model) View() string {
 		Width(m.width).
 		Render(footer),
 	)
-	return strings.Join(components, "\n")
+
+	v := tea.NewView(strings.Join(components, "\n"))
+	v.AltScreen = true
+	return v
 }
 
 var (
-	helpWidget    = tui.Padded.Background(tui.Grey).Foreground(tui.White).Render("? help")
-	versionWidget = tui.Padded.Background(tui.DarkGrey).Foreground(tui.White).Render(version.Version)
+	helpWidget = tui.Padded.Background(tui.Grey).Foreground(tui.White).Render("? help")
 )
+
+func (m model) commandWidget() string {
+	// Get currently running task
+	runningTasks := m.tasks.List(task.ListOptions{
+		Status: []task.Status{task.Running},
+	})
+
+	if len(runningTasks) > 0 {
+		// Display the most recent running task's command
+		t := runningTasks[0]
+		cmdStr := t.Program
+		if len(t.Args) > 0 {
+			cmdStr += " " + strings.Join(t.Args, " ")
+		}
+		return tui.Padded.Background(tui.DarkGrey).Foreground(tui.White).Render(cmdStr)
+	}
+
+	// No running tasks, just show the default program
+	return tui.Padded.Background(tui.DarkGrey).Foreground(tui.White).Render(fmt.Sprintf("command: %s", m.program))
+}
 
 func (m model) reportShortTaskResult(tsk *task.Task) tea.Cmd {
 	if tsk.TaskGroupID != nil {
@@ -373,7 +392,7 @@ func (m model) reportShortTaskResult(tsk *task.Task) tea.Cmd {
 
 func (m model) availableFooterMsgWidth() int {
 	// -2 to accommodate padding
-	return max(0, m.width-lipgloss.Width(helpWidget)-lipgloss.Width(versionWidget))
+	return max(0, m.width-lipgloss.Width(helpWidget)-lipgloss.Width(m.commandWidget()))
 }
 
 // type taskCompletionMsg struct {

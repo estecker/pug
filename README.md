@@ -62,7 +62,7 @@ NAME
   pug
 
 FLAGS
-  -p, --program STRING               The default program to use with pug. (default: terraform)
+  -p, --program STRING               The default program to use with pug. (default: tofu)
   -w, --workdir STRING               The working directory containing modules. (default: .)
   -t, --max-tasks INT                The maximum number of parallel tasks. (default: 32)
       --data-dir STRING              Directory in which to store plan files. (default: /home/louis/.pug)

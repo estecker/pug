@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestPlan_VarsFile tests creating a plan with a workspace tfvars file.
-func TestPlan_VarsFile(t *testing.T) {
+// TestPlan_VarFiles tests creating a plan with a workspace tfvars file.
+func TestPlan_VarFiles(t *testing.T) {
 	f, mod, ws := setupTest(t)
 
 	// Create a workspace tfvars file for dev

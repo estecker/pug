@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/charmbracelet/x/exp/teatest"
 )
 
@@ -14,8 +14,9 @@ func TestQuit(t *testing.T) {
 
 	tm := setup(t, "./testdata/module_list")
 
-	tm.Send(tea.KeyMsg{
-		Type: tea.KeyCtrlC,
+	tm.Send(tea.KeyPressMsg{
+		Code: 'c',
+		Mod:  tea.ModCtrl,
 	})
 
 	waitFor(t, tm, func(s string) bool {

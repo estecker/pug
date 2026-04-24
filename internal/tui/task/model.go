@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/google/uuid"
 	"github.com/leg100/pug/internal/logging"
@@ -107,7 +107,7 @@ func (m *Model) Update(msg tea.Msg) tea.Cmd {
 	)
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		switch {
 		case key.Matches(msg, keys.Common.Cancel):
 			return cancel(m.tasks, m.task.ID)
@@ -188,7 +188,7 @@ const (
 )
 
 // View renders the viewport
-func (m *Model) View() string {
+func (m *Model) View() tea.View {
 	var components []string
 
 	if m.config.showInfo {
@@ -241,8 +241,8 @@ func (m *Model) View() string {
 			Render(wrapped)
 		components = append(components, container)
 	}
-	components = append(components, m.viewport.View())
-	return lipgloss.JoinHorizontal(lipgloss.Left, components...)
+	components = append(components, m.viewport.View().Content)
+	return tea.NewView(lipgloss.JoinHorizontal(lipgloss.Left, components...))
 }
 
 func boolToOnOff(b bool) string {
