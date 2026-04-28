@@ -31,3 +31,9 @@ type Page struct {
 type ModelHelpBindings interface {
 	HelpBindings() []key.Binding
 }
+
+// ModelCopyable is implemented by models that can provide copyable content.
+type ModelCopyable interface {
+	CopyableContent() string
+}
+

@@ -149,3 +149,9 @@ func (m resourceModel) HelpBindings() []key.Binding {
 		resourcesKeys.Untaint,
 	}
 }
+
+// CopyableContent returns the content of the resource's viewport for copying.
+func (m resourceModel) CopyableContent() string {
+	return m.viewport.GetContent()
+}
+

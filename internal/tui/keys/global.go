@@ -20,6 +20,7 @@ type global struct {
 	GrowPaneWidth    key.Binding
 	ClosePane        key.Binding
 	Autoscroll       key.Binding
+	Copy             key.Binding
 	Quit             key.Binding
 	Suspend          key.Binding
 	Help             key.Binding
@@ -85,6 +86,10 @@ var Global = global{
 	Autoscroll: key.NewBinding(
 		key.WithKeys("ctrl+s"),
 		key.WithHelp("ctrl+s", "toggle autoscroll"),
+	),
+	Copy: key.NewBinding(
+		key.WithKeys("C"),
+		key.WithHelp("C", "copy pane text"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("ctrl+c"),

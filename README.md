@@ -204,6 +204,7 @@ These keys are valid on any page.
 |`T`|Go to task groups|
 |`l`|Go to logs|
 |`X`|Close pane|
+|`C`|Copy pane text to clipboard|
 |`+`|Increase pane height|-|
 |`-`|Decrease pane height|-|
 |`<`|Increase pane width|-|

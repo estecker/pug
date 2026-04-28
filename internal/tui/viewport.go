@@ -10,6 +10,7 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
 	"github.com/hokaccha/go-prettyjson"
+	"github.com/leg100/pug/internal"
 	"github.com/leg100/pug/internal/tui/keys"
 )
 
@@ -135,3 +136,10 @@ func (m *Viewport) setContent() {
 	sanitized := SanitizeColors([]byte(wrapped))
 	m.viewport.SetContent(string(sanitized))
 }
+
+// GetContent returns the raw content of the viewport as a string, with ANSI
+// escape codes (color codes) stripped out.
+func (m *Viewport) GetContent() string {
+	return internal.StripAnsi(string(m.content))
+}
+

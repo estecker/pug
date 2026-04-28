@@ -238,6 +238,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.lastTaskID != nil {
 				return m, tui.NavigateTo(tui.TaskKind, tui.WithParent(*m.lastTaskID))
 			}
+		case key.Matches(msg, keys.Global.Copy):
+			// Copy the content from the currently focused pane to clipboard
+			if copyable, ok := m.FocusedModel().(tui.ModelCopyable); ok {
+				content := copyable.CopyableContent()
+				if content == "" {
+					return m, tui.ReportError(errors.New("no content to copy"))
+				}
+				return m, tui.CopyToClipboard(content)
+			} else {
+				return m, tui.ReportError(errors.New("active pane does not support copying"))
+			}
 		default:
 			// Send all others to global task config updater
 			if cmd := m.taskConfig.Update(msg); cmd != nil {

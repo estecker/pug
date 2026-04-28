@@ -331,3 +331,9 @@ func (m Model) GetWorkspaceIDs() ([]resource.ID, error) {
 		return []resource.ID{mod.CurrentWorkspaceID}, nil
 	}
 }
+
+// CopyableContent returns the content of the task's viewport for copying.
+func (m Model) CopyableContent() string {
+	return m.viewport.GetContent()
+}
+

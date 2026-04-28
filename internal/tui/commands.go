@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/atotto/clipboard"
 	tea "charm.land/bubbletea/v2"
 )
 
@@ -17,6 +18,15 @@ func NavigateTo(kind Kind, opts ...NavigateOption) tea.Cmd {
 
 func ReportInfo(msg string) tea.Cmd {
 	return CmdHandler(InfoMsg(msg))
+}
+
+func CopyToClipboard(content string) tea.Cmd {
+	return func() tea.Msg {
+		if err := clipboard.WriteAll(content); err != nil {
+			return ErrorMsg(fmt.Errorf("copying to clipboard: %w", err))
+		}
+		return InfoMsg("Content copied to clipboard")
+	}
 }
 
 func OpenEditor(path string) tea.Cmd {
