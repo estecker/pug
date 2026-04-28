@@ -52,4 +52,3 @@ func TestViewport_GetContent_StripsAnsi(t *testing.T) {
 		})
 	}
 }
-

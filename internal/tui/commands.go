@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/atotto/clipboard"
 	tea "charm.land/bubbletea/v2"
+	"github.com/atotto/clipboard"
 )
 
 // NavigateTo sends an instruction to navigate to a page with the given model

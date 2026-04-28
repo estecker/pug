@@ -336,4 +336,3 @@ func (m Model) GetWorkspaceIDs() ([]resource.ID, error) {
 func (m Model) CopyableContent() string {
 	return m.viewport.GetContent()
 }
-

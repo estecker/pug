@@ -142,4 +142,3 @@ func (m *Viewport) setContent() {
 func (m *Viewport) GetContent() string {
 	return internal.StripAnsi(string(m.content))
 }
-

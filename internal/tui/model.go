@@ -36,4 +36,3 @@ type ModelHelpBindings interface {
 type ModelCopyable interface {
 	CopyableContent() string
 }
-

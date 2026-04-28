@@ -154,4 +154,3 @@ func (m resourceModel) HelpBindings() []key.Binding {
 func (m resourceModel) CopyableContent() string {
 	return m.viewport.GetContent()
 }
-

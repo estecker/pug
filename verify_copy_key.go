@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 // Simple verification script to check that Copy key is properly defined
@@ -36,4 +37,3 @@ func main() {
 		fmt.Println("✗ Copy key NOT found in Global keys slice")
 	}
 }
-
