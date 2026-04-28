@@ -32,6 +32,8 @@ github.com/charmbracelet/ultraviolet v0.0.0-20260309091805-903bfd0cf188 h1:J8v4k
 github.com/charmbracelet/ultraviolet v0.0.0-20260309091805-903bfd0cf188/go.mod h1:FzWNAbe1jEmI+GZljSnlaSA8wJjnNIZhWBLkTsAl6eg=
 github.com/charmbracelet/ultraviolet v0.0.0-20260422141423-a0f1f21775f7 h1:PeRlqWGEoO0apcS62iEgxQhVnFCTOYyQvi2sUTdf6IE=
 github.com/charmbracelet/ultraviolet v0.0.0-20260422141423-a0f1f21775f7/go.mod h1:3YdTxlnV/L0bQ3VN8WOSw8doF7LZV/xawUQ4MuAPDvo=
+github.com/charmbracelet/ultraviolet v0.0.0-20260428153724-66037269d7be h1:j7w8VP/D4lu5+/4GamMmFy8nrtadcl82/fjvDgSHwLo=
+github.com/charmbracelet/ultraviolet v0.0.0-20260428153724-66037269d7be/go.mod h1:3YdTxlnV/L0bQ3VN8WOSw8doF7LZV/xawUQ4MuAPDvo=
 github.com/charmbracelet/x/ansi v0.11.6 h1:GhV21SiDz/45W9AnV2R61xZMRri5NlLnl6CVF7ihZW8=
 github.com/charmbracelet/x/ansi v0.11.6/go.mod h1:2JNYLgQUsyqaiLovhU2Rv/pb8r6ydXKS3NIttu3VGZQ=
 github.com/charmbracelet/x/ansi v0.11.7 h1:kzv1kJvjg2S3r9KHo8hDdHFQLEqn4RBCb39dAYC84jI=
@@ -42,10 +44,14 @@ github.com/charmbracelet/x/exp/golden v0.0.0-20260311145557-c83711a11ffa h1:fCsR
 github.com/charmbracelet/x/exp/golden v0.0.0-20260311145557-c83711a11ffa/go.mod h1:6fMpcW6iwN/kX+xJ52eqVWsDiBTe0UJD24JLoHFe+P0=
 github.com/charmbracelet/x/exp/golden v0.0.0-20260422141420-a6cbdff8a7e2 h1:onvLouoI82aK2WXJ+oRlX2tQ/5C5MMHDrJHCOf6kRTk=
 github.com/charmbracelet/x/exp/golden v0.0.0-20260422141420-a6cbdff8a7e2/go.mod h1:6fMpcW6iwN/kX+xJ52eqVWsDiBTe0UJD24JLoHFe+P0=
+github.com/charmbracelet/x/exp/golden v0.0.0-20260428131021-72ac42529b04 h1:K2Y7Yt805wB9uwrYNSUubfs+aj4FjCgWg00oIiEwEI0=
+github.com/charmbracelet/x/exp/golden v0.0.0-20260428131021-72ac42529b04/go.mod h1:6fMpcW6iwN/kX+xJ52eqVWsDiBTe0UJD24JLoHFe+P0=
 github.com/charmbracelet/x/exp/teatest v0.0.0-20260309091332-e8ca31595cc4 h1:DRnaom4ABZ+VEJuFHx0lb+0cYJrcDZIh1QxuYt9QiZE=
 github.com/charmbracelet/x/exp/teatest v0.0.0-20260309091332-e8ca31595cc4/go.mod h1:aPVjFrBwbJgj5Qz1F0IXsnbcOVJcMKgu1ySUfTAxh7k=
 github.com/charmbracelet/x/exp/teatest v0.0.0-20260422141420-a6cbdff8a7e2 h1:FBYm3qSLjd51O4JkD3tDc/np9lJQlqq8RQSIy/3R09w=
 github.com/charmbracelet/x/exp/teatest v0.0.0-20260422141420-a6cbdff8a7e2/go.mod h1:aPVjFrBwbJgj5Qz1F0IXsnbcOVJcMKgu1ySUfTAxh7k=
+github.com/charmbracelet/x/exp/teatest v0.0.0-20260428131021-72ac42529b04 h1:22dpkvXX/6mM6tw1BXDDn0EIrYWhR8XkJUnmqS79MNQ=
+github.com/charmbracelet/x/exp/teatest v0.0.0-20260428131021-72ac42529b04/go.mod h1:aPVjFrBwbJgj5Qz1F0IXsnbcOVJcMKgu1ySUfTAxh7k=
 github.com/charmbracelet/x/term v0.2.2 h1:xVRT/S2ZcKdhhOuSP4t5cLi5o+JxklsoEObBSgfgZRk=
 github.com/charmbracelet/x/term v0.2.2/go.mod h1:kF8CY5RddLWrsgVwpw4kAa6TESp6EB5y3uxGLeCqzAI=
 github.com/charmbracelet/x/termios v0.1.1 h1:o3Q2bT8eqzGnGPOYheoYS8eEleT5ZVNYNy8JawjaNZY=
@@ -93,6 +99,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/mattn/go-isatty v0.0.21 h1:xYae+lCNBP7QuW4PUnNG61ffM4hVIfm+zUzDuSzYLGs=
 github.com/mattn/go-isatty v0.0.21/go.mod h1:ZXfXG4SQHsB/w3ZeOYbR0PrPwLy+n6xiMrJlRFqopa4=
+github.com/mattn/go-isatty v0.0.22 h1:j8l17JJ9i6VGPUFUYoTUKPSgKe/83EYU2zBC7YNKMw4=
+github.com/mattn/go-isatty v0.0.22/go.mod h1:ZXfXG4SQHsB/w3ZeOYbR0PrPwLy+n6xiMrJlRFqopa4=
 github.com/mattn/go-localereader v0.0.1 h1:ygSAOl7ZXTx4RdPYinUpg6W99U8jWvWi9Ye2JC/oIi4=
 github.com/mattn/go-localereader v0.0.1/go.mod h1:8fBrzywKY7BI3czFoHkuzRoWE9C+EiG4R1k4Cjx5p88=
 github.com/mattn/go-runewidth v0.0.21 h1:jJKAZiQH+2mIinzCJIaIG9Be1+0NR+5sz/lYEEjdM8w=
