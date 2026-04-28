@@ -14,6 +14,7 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/leg100/pug/internal/app"
+	"github.com/leg100/pug/internal/logging"
 	"github.com/leg100/pug/internal/module"
 	"github.com/leg100/pug/internal/resource"
 	"github.com/leg100/pug/internal/task"
@@ -51,6 +52,7 @@ type model struct {
 	err        error
 	info       string
 	taskConfig *tuitask.Config
+	logger     *logging.Logger
 }
 
 func newModel(cfg app.Config, app *app.App) (model, error) {
@@ -86,6 +88,7 @@ func newModel(cfg app.Config, app *app.App) (model, error) {
 		workdir:     cfg.Workdir.PrettyString(),
 		program:     cfg.Program,
 		taskConfig:  taskConfig,
+		logger:      app.Logger,
 	}
 	return m, nil
 }
@@ -292,7 +295,7 @@ func (m model) View() tea.View {
 		components = append(components, m.help())
 	}
 	// Compose footer
-	footer := helpWidget
+	footer := m.lastLogWidget()
 	if m.err != nil {
 		footer += tui.Regular.Padding(0, 1).
 			Background(tui.Red).
@@ -312,7 +315,7 @@ func (m model) View() tea.View {
 			Width(m.availableFooterMsgWidth()).
 			Render(m.info)
 	}
-	footer += m.commandWidget()
+	footer += helpWidget
 	// Add footer
 	components = append(components, tui.Regular.
 		Inline(true).
@@ -329,6 +332,85 @@ func (m model) View() tea.View {
 var (
 	helpWidget = tui.Padded.Background(tui.Grey).Foreground(tui.White).Render("? help")
 )
+
+func (m model) lastLogWidget() string {
+	logs := m.logger.List()
+	if len(logs) == 0 {
+		return ""
+	}
+
+	// Find the most recent log message by comparing timestamps
+	var lastLog logging.Message
+	for i, log := range logs {
+		if i == 0 || log.Time.After(lastLog.Time) {
+			lastLog = log
+		}
+	}
+
+	// Choose background and foreground colors based on log level
+	bgColor := tui.Grey
+	fgColor := tui.White
+	switch lastLog.Level {
+	case "ERROR":
+		bgColor = tui.Red
+		fgColor = tui.White
+	case "WARN":
+		bgColor = tui.Yellow
+		fgColor = tui.Black
+	case "INFO":
+		bgColor = tui.DarkGreen
+		fgColor = tui.White
+	case "DEBUG":
+		bgColor = tui.Grey
+		fgColor = tui.White
+	}
+
+	// Calculate available width for the log message
+	helpWidgetWidth := lipgloss.Width(helpWidget)
+
+	// Reserve space for info/error messages - reduced to 10 chars minimum
+	// to give more space to log messages
+	minInfoWidth := 10
+
+	// Available width for log widget
+	availableWidth := m.width - helpWidgetWidth - minInfoWidth
+
+	// Don't show log if there's not enough space
+	if availableWidth < 15 {
+		return ""
+	}
+
+	// Build full log string: message + attributes
+	var fullLogStr strings.Builder
+	fullLogStr.WriteString(lastLog.Message)
+
+	// Add attributes if they exist
+	if len(lastLog.Attributes) > 0 {
+		for _, attr := range lastLog.Attributes {
+			fullLogStr.WriteString(" ")
+			fullLogStr.WriteString(attr.Key)
+			fullLogStr.WriteString("=")
+			fullLogStr.WriteString(attr.Value)
+		}
+	}
+
+	// Account for padding (2 chars total: 1 on each side)
+	maxContentWidth := availableWidth - 2
+
+	// Check if we need to truncate using runes for proper unicode handling
+	logRunes := []rune(fullLogStr.String())
+	if len(logRunes) > maxContentWidth {
+		if maxContentWidth > 3 {
+			// Truncate and add ellipsis
+			logRunes = append(logRunes[:maxContentWidth-1], '…')
+		} else {
+			logRunes = []rune{'…'}
+		}
+	}
+
+	logStr := string(logRunes)
+	return tui.Padded.Background(bgColor).Foreground(fgColor).Render(logStr)
+}
 
 func (m model) commandWidget() string {
 	// Get currently running task
@@ -392,7 +474,7 @@ func (m model) reportShortTaskResult(tsk *task.Task) tea.Cmd {
 
 func (m model) availableFooterMsgWidth() int {
 	// -2 to accommodate padding
-	return max(0, m.width-lipgloss.Width(helpWidget)-lipgloss.Width(m.commandWidget()))
+	return max(0, m.width-lipgloss.Width(m.lastLogWidget())-lipgloss.Width(helpWidget))
 }
 
 // type taskCompletionMsg struct {

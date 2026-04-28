@@ -46,3 +46,4 @@ pug.log
 go.work
 
 dist/
+.idea/
