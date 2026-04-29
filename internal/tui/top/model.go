@@ -319,13 +319,9 @@ func (m model) View() tea.View {
 			Background(tui.LightGreen).
 			Width(m.availableFooterMsgWidth()).
 			Render(m.info)
-	} else {
-		footer += tui.Padded.
-			Foreground(tui.Black).
-			Background(tui.EvenLighterGrey).
-			Width(m.availableFooterMsgWidth()).
-			Render(m.info)
 	}
+	// Only show status message space if there's an error or info to display
+	// Otherwise, the log widget can use the full available width
 	footer += helpWidget
 	// Add footer
 	components = append(components, tui.Regular.
@@ -379,9 +375,12 @@ func (m model) lastLogWidget() string {
 	// Calculate available width for the log message
 	helpWidgetWidth := lipgloss.Width(helpWidget)
 
-	// Reserve space for info/error messages - reduced to 10 chars minimum
-	// to give more space to log messages
-	minInfoWidth := 10
+	// Reserve space for info/error messages only if there's something to show
+	minInfoWidth := 0
+	if m.err != nil || m.info != "" {
+		// Reserve minimum 10 chars for status messages when they exist
+		minInfoWidth = 10
+	}
 
 	// Available width for log widget
 	availableWidth := m.width - helpWidgetWidth - minInfoWidth
@@ -412,8 +411,18 @@ func (m model) lastLogWidget() string {
 	logRunes := []rune(fullLogStr.String())
 	if len(logRunes) > maxContentWidth {
 		if maxContentWidth > 3 {
-			// Truncate and add ellipsis
-			logRunes = append(logRunes[:maxContentWidth-1], '…')
+			// Truncate in the middle to show beginning and end
+			// Reserve 1 char for ellipsis
+			ellipsis := '…'
+			charsAvailable := maxContentWidth - 1
+			// Split available space to show beginning and end
+			leftChars := (charsAvailable + 1) / 2 // Slightly favor the beginning
+			rightChars := charsAvailable - leftChars
+
+			logRunes = append(
+				append(logRunes[:leftChars], ellipsis),
+				logRunes[len(logRunes)-rightChars:]...,
+			)
 		} else {
 			logRunes = []rune{'…'}
 		}
